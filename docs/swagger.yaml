@@ -1,0 +1,411 @@
+basePath: /
+definitions:
+  model.AuthRequest:
+    properties:
+      password:
+        type: string
+      type:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - type
+    - username
+    type: object
+  model.CreateProductRequest:
+    properties:
+      articul:
+        type: string
+      category:
+        type: string
+      deliveryTimeDescription:
+        type: string
+      images:
+        items:
+          items:
+            type: integer
+          type: array
+        type: array
+      inventory:
+        type: integer
+      price:
+        type: number
+      status:
+        type: string
+      vendor:
+        type: string
+    required:
+    - articul
+    - category
+    - inventory
+    - price
+    - status
+    - vendor
+    type: object
+  model.CreditCardInfo:
+    properties:
+      cvv:
+        type: string
+      date:
+        type: string
+      holder:
+        type: string
+      number:
+        type: string
+    type: object
+  model.CustomerDB:
+    properties:
+      creditCard:
+        $ref: '#/definitions/model.CreditCardInfo'
+      email:
+        type: string
+      id:
+        type: integer
+      paymentAddress:
+        type: string
+      shippingAddress:
+        type: string
+    type: object
+  model.GenericResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  model.GetProductsRequest:
+    properties:
+      articul:
+        type: string
+      category:
+        type: string
+      id:
+        type: string
+      limit:
+        type: integer
+      page:
+        type: integer
+      status:
+        type: string
+      vendor:
+        type: string
+    type: object
+  model.MerchandiserDB:
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  model.ProductDB:
+    properties:
+      articul:
+        type: string
+      category:
+        type: string
+      deliveryTimeDescription:
+        type: string
+      id:
+        type: integer
+      images:
+        items:
+          items:
+            type: integer
+          type: array
+        type: array
+      inventory:
+        type: integer
+      price:
+        type: number
+      status:
+        type: string
+      vendor:
+        type: string
+    type: object
+  model.SaleRequest:
+    properties:
+      customerID:
+        type: integer
+      productID:
+        type: integer
+      quantity:
+        type: integer
+    required:
+    - customerID
+    - productID
+    - quantity
+    type: object
+info:
+  contact: {}
+  description: backend
+  title: so5hw
+  version: "1.0"
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: Request to authorize via JWT-token
+      parameters:
+      - description: Input model
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      summary: Auth request
+      tags:
+      - auth
+  /customer/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: customer's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CustomerDB'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - customer
+  /merchandiser/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: merchandiser's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MerchandiserDB'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - merchandiser
+  /product:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: product's ID
+        in: query
+        name: id
+        type: string
+      - description: articul
+        in: query
+        name: articul
+        type: string
+      - description: vendor
+        in: query
+        name: vendor
+        type: string
+      - description: Page's size
+        in: query
+        name: limit
+        type: integer
+      - description: Number of page
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetProductsRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - product
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: input model
+        in: body
+        name: model
+        required: true
+        schema:
+          $ref: '#/definitions/model.SaleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - product
+  /product/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: product's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - product
+  /product/category:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - product
+schemes:
+- http
+- https
+swagger: "2.0"

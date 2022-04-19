@@ -1,0 +1,16 @@
+{
+  "HttpPort": 8080,
+  "GinMode": "debug",
+  "TokenExpTime": 1800,
+  "AuthAccessSecret": "jsabdhsyagdtsa",
+  "SwaggerBasePath": "/",
+  "Db": {
+    "Host": "localhost",
+    "Port": 5434,
+    "Name": "so5hw",
+    "User": "so5hw_user",
+    "Password": "6eFUhwA6hnD6N5yFqTmu",
+    "Migrate": true,
+    "Log": true
+  }
+}
