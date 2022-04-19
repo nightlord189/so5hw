@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-contrib/static"
 	"github.com/nightlord189/so5hw/internal/handler"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -41,6 +43,15 @@ func main() {
 		AllowAllOrigins:  true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	router.Use(static.Serve("/", static.LocalFile("./web/build", true)))
+
+	//for React-router (non-SPA)
+	router.NoRoute(func(c *gin.Context) {
+		if !strings.Contains(c.Request.RequestURI, "/api/") {
+			c.File("./web/build/index.html")
+		}
+	})
 
 	router.GET("/healthz", func(c *gin.Context) {
 		c.String(200, "success")
