@@ -80,25 +80,12 @@ func (h *Handler) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	product, images := req.ToDbModels()
-
-	err = h.DB.CreateEntity(&product)
+	product, err := h.DB.CreateProduct(&req)
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, model.GenericError(-16, "error create entity: "+err.Error()))
+		c.JSON(http.StatusUnprocessableEntity, model.GenericError(-17, "error create product: "+err.Error()))
 		return
 	}
 
-	for i := range images {
-		images[i].ProductID = product.ID
-	}
-
-	err = h.DB.CreateEntities(&images)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, model.GenericError(-17, "error create images: "+err.Error()))
-		return
-	}
-
-	product.Images = req.Images
 	c.JSON(http.StatusOK, product)
 }
 

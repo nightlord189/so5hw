@@ -23,6 +23,8 @@ type Config struct {
 		Migrate  bool
 		Log      bool `envconfig:"DB_LOG"`
 	}
+	ImageWidth  int `envconfig:"IMAGE_WIDTH"`
+	ImageHeight int `envconfig:"IMAGE_HEIGHT"`
 }
 
 // Load - load config from path

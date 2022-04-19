@@ -12,5 +12,7 @@
     "Password": "6eFUhwA6hnD6N5yFqTmu",
     "Migrate": true,
     "Log": true
-  }
+  },
+  "ImageWidth": 400,
+  "ImageHeight": 400
 }

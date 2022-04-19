@@ -1,10 +1,44 @@
 package db
 
 import (
+	"fmt"
 	"github.com/nightlord189/gormery"
 	"github.com/nightlord189/so5hw/internal/model"
 	"math"
 )
+
+func (d *Manager) CreateProduct(req *model.CreateProductRequest) (model.ProductDB, error) {
+	product, images := req.ToDbModels()
+	tx := d.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Error; err != nil {
+		return product, fmt.Errorf("error tx: %v", err)
+	}
+	err := tx.Create(&product).Error
+	if err != nil {
+		tx.Rollback()
+		return product, fmt.Errorf("err create product: %w", err)
+	}
+	for i := range images {
+		images[i].ProductID = product.ID
+	}
+	err = tx.Create(&images).Error
+	if err != nil {
+		tx.Rollback()
+		return product, fmt.Errorf("err create images: %w", err)
+	}
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		return product, fmt.Errorf("err commit transaction: %w", err)
+	}
+	product.Images = req.Images
+	return product, nil
+}
 
 func (d *Manager) GetCategories() ([]string, error) {
 	entities := make([]string, 0)
