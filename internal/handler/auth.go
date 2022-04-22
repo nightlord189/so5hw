@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/nightlord189/so5hw/internal/model"
@@ -20,12 +21,12 @@ import (
 //@Failure 401 {object} model.GenericResponse
 //@Failure 422 {object} model.GenericResponse
 //@Failure 400 {object} model.GenericResponse
-//@Router /auth [Post]
+//@Router /api/auth [Post]
 //@BasePath /
 func (h *Handler) Auth(c *gin.Context) {
 	var req model.AuthRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, model.GenericError(-11, "error parse json"))
+		c.JSON(http.StatusBadRequest, model.GenericError(-11, fmt.Sprintf("error parse json: %v", err)))
 		return
 	}
 	user, err := h.DB.GetUserEntity(req.Username, req.Type)

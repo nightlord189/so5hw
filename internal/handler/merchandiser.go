@@ -16,7 +16,7 @@ import (
 // @Failure 401 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
 // @Failure 400 {object} model.GenericResponse
-// @Router /merchandiser/{id} [Get]
+// @Router /api/merchandiser/{id} [Get]
 // @BasePath /
 func (h *Handler) GetMerchandiser(c *gin.Context) {
 	id := c.Param("id")

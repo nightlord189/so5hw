@@ -16,7 +16,7 @@ import (
 // @Failure 401 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
 // @Failure 400 {object} model.GenericResponse
-// @Router /customer/{id} [Get]
+// @Router /api/customer/{id} [Get]
 // @BasePath /
 func (h *Handler) GetCustomer(c *gin.Context) {
 	id := c.Param("id")

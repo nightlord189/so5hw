@@ -56,14 +56,14 @@ definitions:
     type: object
   model.CustomerDB:
     properties:
+      billingAddress:
+        type: string
       creditCard:
         $ref: '#/definitions/model.CreditCardInfo'
       email:
         type: string
       id:
         type: integer
-      paymentAddress:
-        type: string
       shippingAddress:
         type: string
     type: object
@@ -143,7 +143,7 @@ info:
   title: so5hw
   version: "1.0"
 paths:
-  /auth:
+  /api/auth:
     post:
       consumes:
       - application/json
@@ -177,7 +177,7 @@ paths:
       summary: Auth request
       tags:
       - auth
-  /customer/{id}:
+  /api/customer/{id}:
     get:
       consumes:
       - application/json
@@ -213,7 +213,30 @@ paths:
             $ref: '#/definitions/model.GenericResponse'
       tags:
       - customer
-  /merchandiser/{id}:
+  /api/fill:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - service
+  /api/merchandiser/{id}:
     get:
       consumes:
       - application/json
@@ -249,7 +272,7 @@ paths:
             $ref: '#/definitions/model.GenericResponse'
       tags:
       - merchandiser
-  /product:
+  /api/product:
     get:
       consumes:
       - application/json
@@ -266,6 +289,10 @@ paths:
       - description: articul
         in: query
         name: articul
+        type: string
+      - description: category
+        in: query
+        name: category
         type: string
       - description: vendor
         in: query
@@ -314,14 +341,14 @@ paths:
         name: model
         required: true
         schema:
-          $ref: '#/definitions/model.SaleRequest'
+          $ref: '#/definitions/model.CreateProductRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.GenericResponse'
+            $ref: '#/definitions/model.ProductDB'
         "400":
           description: Bad Request
           schema:
@@ -330,17 +357,13 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/model.GenericResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/model.GenericResponse'
         "422":
           description: Unprocessable Entity
           schema:
             $ref: '#/definitions/model.GenericResponse'
       tags:
       - product
-  /product/{id}:
+  /api/product/{id}:
     delete:
       consumes:
       - application/json
@@ -376,7 +399,7 @@ paths:
             $ref: '#/definitions/model.GenericResponse'
       tags:
       - product
-  /product/category:
+  /api/product/category:
     get:
       consumes:
       - application/json
@@ -405,6 +428,70 @@ paths:
             $ref: '#/definitions/model.GenericResponse'
       tags:
       - product
+  /api/sale:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: input model
+        in: body
+        name: model
+        required: true
+        schema:
+          $ref: '#/definitions/model.SaleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - sale
+  /reset:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.GenericResponse'
+      tags:
+      - service
 schemes:
 - http
 - https

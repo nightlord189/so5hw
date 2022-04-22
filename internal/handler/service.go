@@ -31,7 +31,7 @@ func (h *Handler) ResetDB(c *gin.Context) {
 // @Param Authorization header string true "Bearer token"
 // @Success 200 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
-// @Router /fill [Post]
+// @Router /api/fill [Post]
 // @BasePath /
 func (h *Handler) FillDB(c *gin.Context) {
 	err := h.DB.FillData()

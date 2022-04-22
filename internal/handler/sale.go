@@ -19,7 +19,7 @@ import (
 // @Failure 403 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
 // @Failure 400 {object} model.GenericResponse
-// @Router /sale [Post]
+// @Router /api/sale [Post]
 // @BasePath /
 func (h *Handler) Sale(c *gin.Context) {
 	var req model.SaleRequest

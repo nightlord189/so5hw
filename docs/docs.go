@@ -23,7 +23,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth": {
+        "/api/auth": {
             "post": {
                 "description": "Request to authorize via JWT-token",
                 "consumes": [
@@ -75,7 +75,7 @@ var doc = `{
                 }
             }
         },
-        "/customer/{id}": {
+        "/api/customer/{id}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -130,7 +130,43 @@ var doc = `{
                 }
             }
         },
-        "/merchandiser/{id}": {
+        "/api/fill": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "service"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/merchandiser/{id}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -185,7 +221,7 @@ var doc = `{
                 }
             }
         },
-        "/product": {
+        "/api/product": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -214,6 +250,12 @@ var doc = `{
                         "type": "string",
                         "description": "articul",
                         "name": "articul",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "category",
+                        "name": "category",
                         "in": "query"
                     },
                     {
@@ -286,7 +328,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.SaleRequest"
+                            "$ref": "#/definitions/model.CreateProductRequest"
                         }
                     }
                 ],
@@ -294,7 +336,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.GenericResponse"
+                            "$ref": "#/definitions/model.ProductDB"
                         }
                     },
                     "400": {
@@ -309,12 +351,6 @@ var doc = `{
                             "$ref": "#/definitions/model.GenericResponse"
                         }
                     },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/model.GenericResponse"
-                        }
-                    },
                     "422": {
                         "description": "Unprocessable Entity",
                         "schema": {
@@ -324,7 +360,7 @@ var doc = `{
                 }
             }
         },
-        "/product/category": {
+        "/api/product/category": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -369,7 +405,7 @@ var doc = `{
                 }
             }
         },
-        "/product/{id}": {
+        "/api/product/{id}": {
             "delete": {
                 "consumes": [
                     "application/json"
@@ -411,6 +447,105 @@ var doc = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sale": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sale"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "input model",
+                        "name": "model",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.SaleRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.GenericResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/reset": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "service"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.GenericResponse"
                         }
@@ -508,6 +643,9 @@ var doc = `{
         "model.CustomerDB": {
             "type": "object",
             "properties": {
+                "billingAddress": {
+                    "type": "string"
+                },
                 "creditCard": {
                     "$ref": "#/definitions/model.CreditCardInfo"
                 },
@@ -516,9 +654,6 @@ var doc = `{
                 },
                 "id": {
                     "type": "integer"
-                },
-                "paymentAddress": {
-                    "type": "string"
                 },
                 "shippingAddress": {
                     "type": "string"

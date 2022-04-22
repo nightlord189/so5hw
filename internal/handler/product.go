@@ -15,7 +15,7 @@ import (
 // @Success 200 {array} string
 // @Failure 401 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
-// @Router /product/category [Get]
+// @Router /api/product/category [Get]
 // @BasePath /
 func (h *Handler) GetCategories(c *gin.Context) {
 	response, err := h.DB.GetCategories()
@@ -42,7 +42,7 @@ func (h *Handler) GetCategories(c *gin.Context) {
 // @Failure 401 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
 // @Failure 400 {object} model.GenericResponse
-// @Router /product [Get]
+// @Router /api/product [Get]
 // @BasePath /
 func (h *Handler) GetProducts(c *gin.Context) {
 	var req model.GetProductsRequest
@@ -70,7 +70,7 @@ func (h *Handler) GetProducts(c *gin.Context) {
 // @Failure 401 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
 // @Failure 400 {object} model.GenericResponse
-// @Router /product [Post]
+// @Router /api/product [Post]
 // @BasePath /
 func (h *Handler) CreateProduct(c *gin.Context) {
 	var req model.CreateProductRequest
@@ -99,7 +99,7 @@ func (h *Handler) CreateProduct(c *gin.Context) {
 // @Failure 401 {object} model.GenericResponse
 // @Failure 422 {object} model.GenericResponse
 // @Failure 400 {object} model.GenericResponse
-// @Router /product/{id} [Delete]
+// @Router /api/product/{id} [Delete]
 // @BasePath /
 func (h *Handler) DeleteProduct(c *gin.Context) {
 	id := c.Param("id")

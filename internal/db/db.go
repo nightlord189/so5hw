@@ -33,12 +33,12 @@ func InitDb(cfg *config.Config) (*Manager, error) {
 }
 
 func (d *Manager) loadFixtures() error {
-	content, err := ioutil.ReadFile("../../configs/truncate.sql")
+	content, err := ioutil.ReadFile("configs/truncate.sql")
 	if err != nil {
 		return err
 	}
 	d.truncateSQL = string(content)
-	content, err = ioutil.ReadFile("../../configs/fixture.sql")
+	content, err = ioutil.ReadFile("configs/fixture.sql")
 	if err != nil {
 		return err
 	}
@@ -68,8 +68,16 @@ func connectDb(cfg *config.Config) (*gorm.DB, error) {
 	return db, err
 }
 
-var sqlMigrations = []string{
-	"ALTER TABLE public.image ADD CONSTRAINT image_fk FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE ON UPDATE CASCADE;",
+type sqlMigration struct {
+	SQL        string
+	CheckError bool
+}
+
+var sqlMigrations = []sqlMigration{
+	{
+		SQL:        "ALTER TABLE public.image ADD CONSTRAINT image_fk FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE ON UPDATE CASCADE;",
+		CheckError: false,
+	},
 }
 
 //AutoMigrate - применить миграции
@@ -86,10 +94,10 @@ func autoMigrate(db *gorm.DB) error {
 	return applyMigrations(db, sqlMigrations)
 }
 
-func applyMigrations(db *gorm.DB, migrations []string) error {
+func applyMigrations(db *gorm.DB, migrations []sqlMigration) error {
 	for _, migration := range sqlMigrations {
-		err := db.Exec(migration).Error
-		if err != nil {
+		err := db.Exec(migration.SQL).Error
+		if err != nil && migration.CheckError {
 			return err
 		}
 	}

@@ -6,10 +6,10 @@
   "SwaggerBasePath": "/",
   "Db": {
     "Host": "localhost",
-    "Port": 5434,
+    "Port": 5432,
     "Name": "so5hw",
-    "User": "so5hw_user",
-    "Password": "6eFUhwA6hnD6N5yFqTmu",
+    "User": "postgres",
+    "Password": "snami",
     "Migrate": true,
     "Log": true
   },

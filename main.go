@@ -23,7 +23,7 @@ import (
 // @BasePath /
 func main() {
 	fmt.Println("start")
-	cfg, err := config.Load("../../configs/config.json")
+	cfg, err := config.Load("configs/config.json")
 	if err != nil {
 		panic(fmt.Sprintf("error initializing config file: %v", err))
 	}
@@ -86,6 +86,15 @@ func main() {
 
 	sale := api.Group("/sale", authMiddleware)
 	sale.POST("", handlerInst.Sale)
+
+	err = dbInstance.TruncateAllTables()
+	if err != nil {
+		fmt.Printf("err truncate tables: %v\n", err)
+	}
+	err = dbInstance.FillData()
+	if err != nil {
+		fmt.Printf("err fill data: %v\n", err)
+	}
 
 	err = router.Run(fmt.Sprintf(":%d", cfg.HTTPPort))
 	if err != nil {
